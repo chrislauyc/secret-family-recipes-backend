@@ -12,6 +12,15 @@ server.get("/",(req,res)=>{
 
 server.use("/mock",mock);
 
+server.get("/recipes/categories",(req,res,next)=>{
+    try{
+        res.status(200).json(["breakfast","lunch","dinner","desert","snacks"]);
+    }
+    catch(e){
+        next(e);
+    }
+})
+
 server.use((err, req, res, next) => {
     return res.status(err.status || 500).json({
         message: err.message,
