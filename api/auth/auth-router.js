@@ -1,7 +1,8 @@
 const router = require("express").Router();
 const usersModel = require("../users/usersModel");
 const {
-    validatePayload,
+    validateLoginPayload,
+    validateRegisterPayload,
     usernameMustNotExist,
     usernameMustExist
 } = require("./auth-middlewares");
@@ -9,7 +10,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const {JWT_SECRET} = require("./secrets");
 
-router.post("/register", validatePayload, usernameMustNotExist, async(req,res,next)=>{
+router.post("/register",validateRegisterPayload, usernameMustNotExist, async(req,res,next)=>{
     try{
         req.body.password = bcrypt.hashSync(req.body.password);
         const [user_id] = await usersModel.insert(req.body);
@@ -26,7 +27,7 @@ router.post("/register", validatePayload, usernameMustNotExist, async(req,res,ne
     }
 });
 
-router.post("/login", validatePayload, usernameMustExist, (req,res,next) => {
+router.post("/login", validateLoginPayload, usernameMustExist, (req,res,next) => {
     try{
         const isValid = bcrypt.compareSync(req.body.password,req.user.password);
 

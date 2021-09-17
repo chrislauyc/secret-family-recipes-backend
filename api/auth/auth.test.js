@@ -2,13 +2,15 @@ const request = require("supertest");
 const server = require("../server");
 const db = require("../../data/data-config")
 const bcrypt = require("bcryptjs");
-const user1 = {username:"chris",password:"123456"};
-const user2 = {username:"eve",password:"654321"};
+const jwt = require("jsonwebtoken");
 
-const user1hashed = {...user1,password:bcrypt.hashSync(user1.password)};
-const user2hashed = {...user2,password:bcrypt.hashSync(user2.password)};
 
 bcrypt.hashSync = jest.fn(()=>"this is a hashed password");
+bcrypt.compareSync = jest.fn((mockPassword)=>mockPassword==="correctPassword");
+
+
+jwt.sign = jest.fn(()=>"signed by jsonwebtoken");
+
 
 beforeAll(async()=>{
 
@@ -95,5 +97,58 @@ describe("[POST] /api/auth/register",()=>{
         expect(res.body).toHaveProperty("user_id");
         expect(res.body.username).toEqual("nicole");
         expect(res.body.message).toEqual("registration successful");
+    });
+});
+
+
+describe("[POST] /api/auth/login",()=>{
+    test("[1] responds with 400 if invalid body",async()=>{
+        let invalid = {username:"john"};
+        let res = await request(server).post("/api/auth/login").send(invalid);
+        expect(res.status).toBe(400);
+        expect(res.body.message).toEqual("username and password required");
+        invalid = {password:"12334534"};
+        res = await request(server).post("/api/auth/login").send(invalid);
+        expect(res.status).toBe(400);
+        expect(res.body.message).toEqual("username and password required");
+        invalid = {username:"",password:""};
+        expect(res.status).toBe(400);
+        expect(res.body.message).toEqual("username and password required");
+
+        // invalid = {username:"chris",password:""};
+        // res = await request(server).post("/api/auth/login").send(invalid);
+        // expect(res.body).toEqual({})
+        // expect(res.status).toBe(400);
+        
+        invalid = {username:"",password:"12334534"};
+        res = await request(server).post("/api/auth/login").send(invalid);
+        expect(res.status).toBe(400);
+        
+        invalid = {username:"john"};
+        res = await request(server).post("/api/auth/login").send(invalid);
+        expect(res.status).toBe(400);
+        
+        invalid = {password:"12334534"};
+        res = await request(server).post("/api/auth/login").send(invalid);
+        expect(res.status).toBe(400);
+    });
+    test("[2] responds with 401 if password is incorrect",async()=>{
+        const res = await request(server).post("/api/auth/login").send({username:"john",password:"this is incorrect"});
+        expect(res.status).toBe(401);
+    });
+    test("[3] responds with 404 if username is not found",async()=>{
+        const res = await request(server).post("/api/auth/login").send({username:"notInDB",password:"correctPassword"});
+        expect(res.status).toBe(404);
+    });
+    test("[4] responds with 200 and the created token",async()=>{
+        const login = {
+            user_id:1,
+            username:"john",
+            token:"signed by jsonwebtoken",
+            message:"login successful"
+        }
+        const res = await request(server).post("/api/auth/login").send({username:"john",password:"correctPassword"});
+        expect(res.body).toMatchObject(login);
+        expect(res.status).toBe(200);
     });
 });

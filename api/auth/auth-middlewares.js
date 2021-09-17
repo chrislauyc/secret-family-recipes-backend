@@ -17,7 +17,7 @@ const checkValidation = (status,message) =>{
     };
 };
 
-const validatePayload = [
+const validateRegisterPayload = [
     body("username")
     .isString()
     .trim()
@@ -31,6 +31,19 @@ const validatePayload = [
     body("email").isString().trim().isEmail(),
 
     checkValidation(400,"username, password, and email required")
+];
+const validateLoginPayload = [
+    body("username")
+    .isString()
+    .trim()
+    .isLength({min:1}),
+
+    body("password")
+    .isString()
+    .trim()
+    .isLength({min:1}),
+
+    checkValidation(400,"username and password required")
 ];
 
 const usernameMustNotExist = [
@@ -49,11 +62,11 @@ const usernameMustNotExist = [
 ];
 
 const usernameMustExist = [
-    body("username").custom((username)=>{
+    body("username").custom((username,{req})=>{
         return usersModel.getByQuery({username})
         .then((userFound)=>{
             if(userFound){
-                req.user = rows[0];
+                req.user = userFound;
                 return Promise.resolve();
             }
             else{
@@ -74,7 +87,8 @@ const restricted = [
 ];
 
 module.exports = {
-    validatePayload,
+    validateLoginPayload,
+    validateRegisterPayload,
     usernameMustNotExist,
     usernameMustExist,
     restricted
