@@ -9,15 +9,17 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const {JWT_SECRET} = require("./secrets");
 
-router.post("/register", validatePayload, usernameMustNotExist, (req,res,next)=>{
+router.post("/register", validatePayload, usernameMustNotExist, async(req,res,next)=>{
     try{
         req.body.password = bcrypt.hashSync(req.body.password);
-        usersModel.insert(req.body);
-        res.status(201).json({
-            user_id,
-            username,
-            message:"registration successful"
-        })
+        const [user_id] = await usersModel.insert(req.body);
+        if(user_id){
+            res.status(201).json({
+                user_id,
+                username:req.body.username,
+                message:"registration successful"
+            })
+        }
     }
     catch(e){
         next(e);
@@ -53,3 +55,5 @@ router.post("/login", validatePayload, usernameMustExist, (req,res,next) => {
         next(e);
     }
 });
+
+module.exports = router;
