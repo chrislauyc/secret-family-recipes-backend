@@ -41,6 +41,36 @@ describe("[POST] /api/auth/register",()=>{
         let res = await request(server).post("/api/auth/register").send(invalid);
         expect(res.status).toBe(400);
         expect(res.body.message).toEqual("username, password, and email required");
+        
+        invalid = {username:"sam",password:"",email:"sam@gmail.com"};
+        res = await request(server).post("/api/auth/register").send(invalid);
+        expect(res.status).toBe(400);
+        expect(res.body.message).toEqual("username, password, and email required");
+
+        invalid = {username:"",password:"12334534"};
+        res = await request(server).post("/api/auth/register").send(invalid);
+        expect(res.status).toBe(400);
+        expect(res.body.message).toEqual("username, password, and email required");
+
+        invalid = {username:"sam",password:"",email:"sam@gmail.com"};
+        res = await request(server).post("/api/auth/register").send(invalid);
+        expect(res.status).toBe(400);
+        expect(res.body.message).toEqual("username, password, and email required");
+
+        invalid = {username:"sam"};
+        res = await request(server).post("/api/auth/register").send(invalid);
+        expect(res.status).toBe(400);
+        expect(res.body.message).toEqual("username, password, and email required");
+
+        invalid = {password:"12334534"};
+        res = await request(server).post("/api/auth/register").send(invalid);
+        expect(res.status).toBe(400);
+        expect(res.body.message).toEqual("username, password, and email required");
+
+        invalid = {email:"sam@gmail.com"};
+        res = await request(server).post("/api/auth/register").send(invalid);
+        expect(res.status).toBe(400);
+        expect(res.body.message).toEqual("username, password, and email required");
 
     });
     test("[2] responds with 400 if username already exists",async()=>{
