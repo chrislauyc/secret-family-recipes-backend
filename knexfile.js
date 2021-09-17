@@ -27,11 +27,17 @@ module.exports = {
     ...sharedCofig,
     ...sqliteConfig,
     // connection: process.env.DEV_DB_URL,
+    seeds:{
+      directory:"./data/test-seeds"
+    },
   },
   testing:{
     ...sharedCofig,
     ...sqliteConfig,
     // connection: process.env.TEST_DB_URL
+    seeds:{
+      directory:"./data/test-seeds"
+    },
   },
   production: {
     ...sharedCofig,

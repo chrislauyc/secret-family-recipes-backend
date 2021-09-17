@@ -43,7 +43,6 @@ exports.up = function(knex) {
         .onUpdate("CASCADE");
 
         table.integer("category_id")
-        .unique()
         .references("category_id")
         .inTable("categories");
 
@@ -92,7 +91,8 @@ exports.up = function(knex) {
         .onDelete('CASCADE');
 
         table.integer("unit_id")
-        .defaultTo(1);
+        .references("unit_id")
+        .inTable("units");
 
         table.double("amount")
         .notNullable()
@@ -104,8 +104,8 @@ exports.down = function(knex) {
     return knex.schema
     .dropTableIfExists("ingredients_steps")
     .dropTableIfExists("steps")
-    .dropTableIfExists("sources")
     .dropTableIfExists("recipes")
+    .dropTableIfExists("sources")
     .dropTableIfExists("units")
     .dropTableIfExists("ingredients")
     .dropTableIfExists("categories")
