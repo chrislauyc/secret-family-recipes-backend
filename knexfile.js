@@ -1,3 +1,6 @@
+
+
+
 const sharedCofig = {
   migrations:{
     directory:"./data/migrations"
@@ -14,39 +17,29 @@ const sqliteConfig = {
       // runs after a connection is made to the sqlite engine
       conn.run('PRAGMA foreign_keys = ON', done); // turn on FK enforcement
     }
-  }
+  },
+  connection: {
+    filename: './data/dev.db3'
+  },
 }
 module.exports = {
-
   development: {
     ...sharedCofig,
     ...sqliteConfig,
-    connection: {
-      filename: './data/dev.db3'
-    },
+    // connection: process.env.DEV_DB_URL,
   },
   testing:{
     ...sharedCofig,
     ...sqliteConfig,
-    connection:{
-      filename:"./data/testing.db3"
-    }
+    // connection: process.env.TEST_DB_URL
   },
-
   production: {
-    client: 'postgresql',
-    connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
-    },
+    ...sharedCofig,
+    client: "pg",
+    connection: process.env.DB_URL,
     pool: {
       min: 2,
       max: 10
-    },
-    migrations: {
-      tableName: 'knex_migrations'
     }
   }
-
 };

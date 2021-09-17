@@ -47,27 +47,15 @@ exports.up = function(knex) {
         .references("category_id")
         .inTable("categories");
 
+        table.integer("source_id")
+        .references("source_id")
+        .inTable("sources");
+
         table.string("recipe_name").notNullable();
 
         table.string("image_url");
     })
-    .createTable("recipes_sources",table=>{
-        table.increments("recipes_sources_id");
 
-        table.integer("source_id")
-        .notNullable()
-        .references("source_id")
-        .inTable("sources")
-        .onDelete("CASCADE")
-        .onUpdate("CASCADE");
-
-        table.integer("recipe_id")
-        .notNullable()
-        .references("recipe_id")
-        .inTable("recipes")
-        .onDelete("CASCADE")
-        .onUpdate("CASCADE");
-    })
     .createTable("steps",table=>{
         table.increments("step_id");
 
