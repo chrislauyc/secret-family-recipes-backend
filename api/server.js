@@ -1,11 +1,14 @@
 const express = require("express");
 const server = express();
 const mock = require("./mock/mock");
+const cors = require("cors")
 const authRouter = require("./auth/auth-router");
 // const router = require("path to router");
 server.use(express.json());
 
 // server.use("/api/<path>",router);
+
+server.use(cors());
 
 server.get("/",(req,res)=>{
     res.status(200).json({message:"Welcome to the Secret Family Recipes backend"});

@@ -44,7 +44,9 @@ exports.up = function(knex) {
 
         table.integer("category_id")
         .references("category_id")
-        .inTable("categories");
+        .inTable("categories")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
 
         table.integer("source_id")
         .references("source_id")

@@ -1,6 +1,9 @@
+require("dotenv").config();
+const pg = require("pg");
 
-
-
+if (process.env.DATABASE_URL) {
+  pg.defaults.ssl = { rejectUnauthorized: false }
+}
 const sharedCofig = {
   migrations:{
     directory:"./data/migrations"
@@ -9,23 +12,12 @@ const sharedCofig = {
     directory:"./data/seeds"
   },
 }
-const sqliteConfig = {
-  client: 'sqlite3',
-  useNullAsDefault: true,
-  pool: {
-    afterCreate: (conn, done) => {
-      // runs after a connection is made to the sqlite engine
-      conn.run('PRAGMA foreign_keys = ON', done); // turn on FK enforcement
-    }
-  },
-  connection: {
-    filename: './data/dev.db3'
-  },
-}
+
 module.exports = {
   development: {
     ...sharedCofig,
-    ...sqliteConfig,
+    client:"pg",
+    connection: process.env.DEV_DATABASE_URL,
     // connection: process.env.DEV_DB_URL,
     seeds:{
       directory:"./data/test-seeds"
@@ -33,7 +25,8 @@ module.exports = {
   },
   testing:{
     ...sharedCofig,
-    ...sqliteConfig,
+    client:"pg",
+    connection: process.env.TEST_DATABASE_URL,
     // connection: process.env.TEST_DB_URL
     seeds:{
       directory:"./data/test-seeds"
@@ -42,7 +35,7 @@ module.exports = {
   production: {
     ...sharedCofig,
     client: "pg",
-    connection: process.env.DB_URL,
+    connection: process.env.DATABASE_URL,
     pool: {
       min: 2,
       max: 10
