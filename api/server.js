@@ -3,11 +3,12 @@ const server = express();
 const mock = require("./mock/mock");
 const cors = require("cors")
 const authRouter = require("./auth/auth-router");
+const helmet = require("helmet");
 // const router = require("path to router");
 server.use(express.json());
 
 // server.use("/api/<path>",router);
-
+server.use(helmet());
 server.use(cors());
 
 server.get("/",(req,res)=>{

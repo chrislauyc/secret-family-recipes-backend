@@ -1,6 +1,6 @@
 const request = require("supertest");
 const server = require("../server");
-const db = require("../../data/data-config")
+const db = require("../../data/data-config");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
