@@ -11,7 +11,7 @@
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
     "seed": "knex seed:run",
-    "testh": "cross-env NPM_CONFIG_PRODUCTION=false NODE_ENV=testing jest --watch --verbose --runInBand",
+    "testh": "NPM_CONFIG_PRODUCTION=false NODE_ENV=testing jest --watch --verbose --runInBand",
     "migrateh": "heroku run knex migrate:latest -a family-recipes-app",
     "rollbackh": "heroku run knex migrate:rollback -a family-recipes-app",
     "databaseh": "heroku pg:psql -a family-recipes-app",
