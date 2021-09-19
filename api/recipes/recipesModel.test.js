@@ -98,14 +98,13 @@ describe("recipesModel.js",()=>{
                 ]
             }
 
-            const recipe_id = await model.insert(recipe);
+            const [recipe_id] = await model.insert(recipe);
             expect(await db("recipes").where({recipe_id,recipe_name:"tacos"})).toHaveLength(1);
             expect(
                 await db("recipes")
                 .where({recipe_id,recipe_name:"tacos",source_name:"grandmother",category_name:"dinner",image_url:"https://someimage.jpg"})
-                .join("sources","recipes.source_id","sources.source_id")
-                .join("categories","recipes.category_id","categories.category_id")
             ).toHaveLength(1);
+
             expect(
                 await db("steps")
                 .where({recipe_id})
@@ -119,34 +118,33 @@ describe("recipesModel.js",()=>{
         test("updated record in db",async()=>{
             const recipe = {
                 user_id:1,
-                source:"grandmother",
-                category:"dinner",
+                source_name:"grandmother",
+                category_name:"dinner",
                 recipe_name:"tacos",
                 image_url:"https://someimage.jpg",
                 steps:[
                     {
-                        description:"cook them",
+                        instructions:"cook them",
                         ingredients:[
                             {
                                 ingredient_name:"taco shell",
                                 amount:10,
+                                unit_name:"none"
                             },
                             {
                                 ingredient_name:"miced beef",
                                 amount:125,
-                                unit:"gram"
+                                unit_name:"gram"
                             }
                         ]
                     }
                 ]
             }
-            const recipe_id = await model.update(recipe,1);
+            const [recipe_id] = await model.update(recipe,1);
             expect(await db("recipes").where({recipe_id,recipe_name:"tacos"})).toHaveLength(1);
             expect(
                 await db("recipes")
                 .where({recipe_id,recipe_name:"tacos",source_name:"grandmother",category_name:"dinner",image_url:"https://someimage.jpg"})
-                .join("sources","recipes.source_id","sources.source_id")
-                .join("categories","recipes.category_id","categories.category_id")
             ).toHaveLength(1);
             expect(
                 await db("steps")

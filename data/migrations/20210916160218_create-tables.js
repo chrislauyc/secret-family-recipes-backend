@@ -7,10 +7,6 @@ exports.up = function(knex) {
         table.string("email").notNullable().unique();
         table.string("password").notNullable();
     })
-    .createTable("categories",table=>{
-        table.increments("category_id");
-        table.string("category_name").notNullable().unique();
-    })
     .createTable("ingredients",table=>{
         table.increments("ingredient_id");
         table.string("ingredient_name").notNullable().unique();
@@ -18,19 +14,6 @@ exports.up = function(knex) {
     .createTable("units",table=>{
         table.increments("unit_id");
         table.string("unit_name").notNullable().unique();
-    })
-    .createTable("sources",table=>{
-        table.increments("source_id");
-
-        table.string("source_name").notNullable();
-
-        table.integer("user_id")
-        .unsigned()
-        .notNullable()
-        .references("user_id")
-        .inTable("users")
-        .onDelete("CASCADE")
-        .onUpdate("CASCADE");
     })
     .createTable("recipes",table=>{
         table.increments("recipe_id");
@@ -42,15 +25,9 @@ exports.up = function(knex) {
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
 
-        table.integer("category_id")
-        .references("category_id")
-        .inTable("categories")
-        .onDelete("CASCADE")
-        .onUpdate("CASCADE");
+        table.string("category_name");
 
-        table.integer("source_id")
-        .references("source_id")
-        .inTable("sources");
+        table.string("source_name");
 
         table.string("recipe_name").notNullable();
 
@@ -107,9 +84,7 @@ exports.down = function(knex) {
     .dropTableIfExists("ingredients_steps")
     .dropTableIfExists("steps")
     .dropTableIfExists("recipes")
-    .dropTableIfExists("sources")
     .dropTableIfExists("units")
     .dropTableIfExists("ingredients")
-    .dropTableIfExists("categories")
     .dropTableIfExists("users");
 };
