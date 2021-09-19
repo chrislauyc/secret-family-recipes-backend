@@ -70,6 +70,7 @@ exports.up = function(knex) {
         .onDelete('CASCADE');
 
         table.integer("unit_id")
+        .defaultsTo(1)
         .references("unit_id")
         .inTable("units");
 
