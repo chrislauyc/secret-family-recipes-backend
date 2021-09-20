@@ -62,7 +62,7 @@ router.put(
     recipeMustBelongToUser,
     async(req,res,next)=>{
     try{
-        const [recipe_id] = await recipesModel.update(req.body,req.param.recipe_id)
+        const [recipe_id] = await recipesModel.update(req.body,req.params.recipe_id);
         res.status(200).json({recipe_id,message:"recipe updated successfull"});
     }
     catch(e){
@@ -78,7 +78,7 @@ router.delete(
     recipeMustBelongToUser,
     async(req,res,next)=>{
     try{
-        const [recipe_id] = await recipesModel.remove(req.param.recipe_id);
+        const [recipe_id] = await recipesModel.remove(req.params.recipe_id);
         res.status(200).json({recipe_id,message:"recipe deleted successfully"});
     }
     catch(e){

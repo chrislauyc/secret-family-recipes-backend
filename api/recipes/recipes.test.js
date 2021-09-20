@@ -3,28 +3,52 @@ const server = require("../server");
 const db = require("../../data/data-config");
 const jwt = require("jsonwebtoken");
 
+// const recipe = {
+//   recipe_id:1,
+//   user_id:1,
+//   source:"grandmother",
+//   category:"dinner",
+//   recipe_name:"tacos",
+//   image_url:"https://www.thewholesomedish.com/wp-content/uploads/2019/06/The-Best-Classic-Tacos-550.jpg",
+//   steps:[
+//       {
+//         description:"cook them",
+//         ingredients:[
+//             {
+//                 ingredient_name:"taco shell",
+//                 amount:10,
+//                 unit:"none"
+//             },
+//             {
+//                 ingredient_name:"miced beef",
+//                 amount:125,
+//                 unit:"gram"
+//             }
+//         ]
+//       }
+//   ]
+// }
 const recipe = {
-  recipe_id:1,
   user_id:1,
   source:"grandmother",
   category:"dinner",
   recipe_name:"tacos",
-  image_url:"https://www.thewholesomedish.com/wp-content/uploads/2019/06/The-Best-Classic-Tacos-550.jpg",
+  image_url:"https://someimage.jpg",
   steps:[
       {
-        description:"cook them",
-        ingredients:[
-            {
-                ingredient_name:"taco shell",
-                amount:10,
-                unit:"none"
-            },
-            {
-                ingredient_name:"miced beef",
-                amount:125,
-                unit:"gram"
-            }
-        ]
+          description:"cook them",
+          ingredients:[
+              {
+                  ingredient_name:"taco shell",
+                  amount:10,
+                  unit:"none"
+              },
+              {
+                  ingredient_name:"miced beef",
+                  amount:125,
+                  unit:"gram"
+              }
+          ]
       }
   ]
 }
@@ -174,7 +198,6 @@ describe("[POST] /api/:user_id/recipes",()=>{
       expect(await db("recipes").where({recipe_id:1}).first()).toMatchObject({
         recipe_name:"updated name",
       });
-
     })
   });
   
