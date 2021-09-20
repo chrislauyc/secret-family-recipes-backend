@@ -34,6 +34,7 @@ router.post("/login", validateLoginPayload, usernameMustExist, (req,res,next) =>
         if(isValid){
             const {user_id,username,email} = req.user;
             const payload = {
+                user_id,
                 username,
                 email
             };

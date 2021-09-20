@@ -140,6 +140,12 @@ describe("recipesModel.js",()=>{
                     }
                 ]
             }
+
+            //ing_steps that are not recipe_id:1
+            const ing_steps = await db("steps")
+            .whereNot({recipe_id:1})
+            .join("ingredients_steps as i","i.step_id","steps.step_id");
+
             const [recipe_id] = await model.update(recipe,1);
             expect(await db("recipes").where({recipe_id,recipe_name:"tacos"})).toHaveLength(1);
             expect(
@@ -153,14 +159,28 @@ describe("recipesModel.js",()=>{
                 .join("ingredients","i.ingredient_id","ingredients.ingredient_id")
                 .leftJoin("units","units.unit_id","i.unit_id")
             ).toHaveLength(2);
+
+            expect(
+                await db("ingredients_steps")
+            ).toHaveLength(ing_steps.length+2);
         });
     });
     describe("remove",()=>{
-        test("removed record from db",async()=>{
+        test("removed records from db",async()=>{
+            //ing_steps that are not recipe_id:1
+            const ing_steps = await db("steps")
+            .whereNot({recipe_id:1})
+            .join("ingredients_steps as i","i.step_id","steps.step_id");
+            //call function
             const [recipe_id] = await model.remove(1);
             expect(
                 await db("recipes").where({recipe_id})
             ).toHaveLength(0);
+            expect(
+                await db("ingredients_steps")
+            ).toHaveLength(ing_steps.length);
+            
+
         });
     });
 });
