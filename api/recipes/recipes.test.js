@@ -85,12 +85,12 @@ describe("[GET] /api/:user_id/recipes",()=>{
     expect(res.status).toBe(404);
   });
   test("[3] responds with 200 the correct number of rows",async()=>{
-    res = await request(server).get("/api/recipes").set("Authorization","valid token");
+    res = await request(server).get("/api/1/recipes").set("Authorization","valid token");
     expect(res.status).toBe(200);
     expect(res.body).toHaveLength((await db("recipes").where({user_id:1})).length);
   });
   test("[4] responds with the correct format",async()=>{
-    res = await request(server).get("/api/jokes").set("Authorization","valid token");
+    res = await request(server).get("/api/1/recipes").set("Authorization","valid token");
     const data = res.body;
     expect(data).toHaveLength(2);
     const recipe = data[0];
@@ -130,9 +130,11 @@ describe("[POST] /api/:user_id/recipes",()=>{
     expect(res.status).toBe(404);
   });
   test("[3] created object in db with 201",async()=>{
+    const {recipe_id} = await db("recipes").select("recipe_id").orderBy("recipe_id","desc").first();
+
     const res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(recipe);
-    expect(res.body.recipe_id).toBe(3);
-    expect(await db("recipes").where({recipe_id:3})).toHaveLength(1);
+    expect(res.body.recipe_id).toBe(recipe_id+1);
+    expect(await db("recipes").where({recipe_id:recipe_id+1})).toHaveLength(1);
   });
   test("[4] responds with 400 if body is missing or invalid",async()=>{
  
@@ -148,7 +150,7 @@ describe("[POST] /api/:user_id/recipes",()=>{
       expect(res.status).toBe(401);
     });
     test("[2] responds with 401 if token is valid but recipe does not belong to user",async()=>{
-      const res = await request(server).get("/api/2/recipes/1").set("Authorization","valid token");
+      const res = await request(server).get("/api/1/recipes/3").set("Authorization","valid token");
       expect(res.status).toBe(401);
     })
     test("[3] responds with 404 if user_id not found",async()=>{

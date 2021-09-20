@@ -3,6 +3,7 @@ const server = express();
 const mock = require("./mock/mock");
 const cors = require("cors")
 const authRouter = require("./auth/auth-router");
+const recipesRouter = require("./recipes/recipesRouter");
 const helmet = require("helmet");
 // const router = require("path to router");
 server.use(express.json());
@@ -18,6 +19,8 @@ server.get("/",(req,res)=>{
 server.use("/mock",mock);
 
 server.use("/api/auth",authRouter);
+
+server.use("/api",recipesRouter)
 
 server.get("/recipes/categories",(req,res,next)=>{
     try{

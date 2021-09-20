@@ -75,23 +75,23 @@ describe("recipesModel.js",()=>{
         test("can insert into database",async()=>{
             const recipe = {
                 user_id:1,
-                source_name:"grandmother",
-                category_name:"dinner",
+                source:"grandmother",
+                category:"dinner",
                 recipe_name:"tacos",
                 image_url:"https://someimage.jpg",
                 steps:[
                     {
-                        instructions:"cook them",
+                        description:"cook them",
                         ingredients:[
                             {
                                 ingredient_name:"taco shell",
                                 amount:10,
-                                unit_name:"none"
+                                unit:"none"
                             },
                             {
                                 ingredient_name:"miced beef",
                                 amount:125,
-                                unit_name:"gram"
+                                unit:"gram"
                             }
                         ]
                     }
@@ -118,23 +118,23 @@ describe("recipesModel.js",()=>{
         test("updated record in db",async()=>{
             const recipe = {
                 user_id:1,
-                source_name:"grandmother",
-                category_name:"dinner",
+                source:"grandmother",
+                category:"dinner",
                 recipe_name:"tacos",
                 image_url:"https://someimage.jpg",
                 steps:[
                     {
-                        instructions:"cook them",
+                        description:"cook them",
                         ingredients:[
                             {
                                 ingredient_name:"taco shell",
                                 amount:10,
-                                unit_name:"none"
+                                unit:"none"
                             },
                             {
                                 ingredient_name:"miced beef",
                                 amount:125,
-                                unit_name:"gram"
+                                unit:"gram"
                             }
                         ]
                     }
