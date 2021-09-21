@@ -84,16 +84,16 @@ const recipeMustBelongToUser = [
 ];
 
 const validateRecipePayload = [
-    body("source").isString().trim().toLowerCase(),
-    body("category").isString().trim().toLowerCase(),
-    body("recipe_name").isString().trim().toLowerCase(),
-    body("image_url").trim().isURL(),
+    body("source").isString().trim().toLowerCase().isLength({min:1}),
+    body("category").isString().trim().toLowerCase().isLength({min:1}),
+    body("recipe_name").isString().trim().toLowerCase().isLength({min:1}),
+    body("image_url").optional().trim().isURL().isLength({min:1}),
     body("steps").isArray(),
-    body("steps.*.description").isString().trim().isString(),
+    body("steps.*.description").isString().trim().isString().isLength({min:1}),
     body("steps.*.ingredients").isArray(),
-    body("steps.*.ingredients.*.ingredient_name").isString().trim().toLowerCase(),
+    body("steps.*.ingredients.*.ingredient_name").isString().trim().toLowerCase().isLength({min:1}),
     body("steps.*.ingredients.*.amount").isNumeric({min:0}),
-    body("steps.*.ingredients.*.unit").optional().isString().trim().toLowerCase(),
+    body("steps.*.ingredients.*.unit").optional().isString().trim().toLowerCase().isLength({min:1}),
     checkValidation(400,"invalid recipe object")
 ];
 
