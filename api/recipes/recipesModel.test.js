@@ -72,31 +72,31 @@ describe("recipesModel.js",()=>{
         });
     });
     describe("insert",()=>{
+        const recipe = {
+            user_id:1,
+            source:"grandmother",
+            category:"dinner",
+            recipe_name:"tacos",
+            image_url:"https://someimage.jpg",
+            steps:[
+                {
+                    description:"cook them",
+                    ingredients:[
+                        {
+                            ingredient_name:"taco shell",
+                            amount:10,
+                            unit:"none"
+                        },
+                        {
+                            ingredient_name:"miced beef",
+                            amount:125,
+                            unit:"gram"
+                        }
+                    ]
+                }
+            ]
+        }
         test("can insert into database",async()=>{
-            const recipe = {
-                user_id:1,
-                source:"grandmother",
-                category:"dinner",
-                recipe_name:"tacos",
-                image_url:"https://someimage.jpg",
-                steps:[
-                    {
-                        description:"cook them",
-                        ingredients:[
-                            {
-                                ingredient_name:"taco shell",
-                                amount:10,
-                                unit:"none"
-                            },
-                            {
-                                ingredient_name:"miced beef",
-                                amount:125,
-                                unit:"gram"
-                            }
-                        ]
-                    }
-                ]
-            }
 
             const [recipe_id] = await model.insert(recipe);
             expect(await db("recipes").where({recipe_id,recipe_name:"tacos"})).toHaveLength(1);
@@ -112,6 +112,10 @@ describe("recipesModel.js",()=>{
                 .join("ingredients","i.ingredient_id","ingredients.ingredient_id")
                 .leftJoin("units","units.unit_id","i.unit_id")
             ).toHaveLength(2);
+        })
+        test("add duplicate recipe with different recipe_name without error",async()=>{
+            await model.insert(recipe);
+            await model.insert({...recipe,recipe_name:"another name"});
         })
     });
     describe("update",()=>{

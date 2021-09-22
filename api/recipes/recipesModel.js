@@ -4,7 +4,7 @@ const insertSteps = async(steps,recipe_id)=>{
     //inserting steps
     for(let j = 0; j < steps.length;j++){
         const step = steps[j];
-        const ingredients = step.ingredients.map(({ingredient_name})=>({ingredient_name}));
+        const ingredient_ids = [];
 
         const unit_ids = [];
 
@@ -23,6 +23,8 @@ const insertSteps = async(steps,recipe_id)=>{
             }
         }   
         
+
+
         const [step_id] = await db("steps")
         .insert({
             step_number:j+1,
@@ -31,9 +33,19 @@ const insertSteps = async(steps,recipe_id)=>{
         })
         .returning("step_id");
         
-        const ingredient_ids = await db("ingredients")
-        .insert(ingredients)
-        .returning("ingredient_id");
+        for(let {ingredient_name} of step.ingredients){
+            const ingredient = await db("ingredients")
+            .where({ingredient_name});
+            if(ingredient.length===0){
+                const [ingredient_id] = await db("ingredients")
+                .insert({ingredient_name})
+                .returning("ingredient_id");
+                ingredient_ids.push(ingredient_id);
+            }
+            else{
+                ingredient_ids.push(ingredient[0].ingredient_id);
+            }
+        }
         
         const ingredients_steps = step.ingredients.map(({amount},i)=>({
             amount,
