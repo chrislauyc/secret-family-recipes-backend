@@ -20,65 +20,43 @@ const checkValidation = (status,message) =>{
 };
 const recipeMustExist = [
     param("recipe_id").toInt().custom((recipe_id,{req})=>{
-        try{
-            return db("recipes")
-            .where({recipe_id})
-            .first()
-            .then((recipe)=>{
-                if(recipe){
-                    req.recipe = recipe;
-                    return true;
-                }
-                else{
-                    return false;
-                }
-            });
-        }
-        catch(e){
-            next(e);
-        }
+        return db("recipes")
+        .where({recipe_id})
+        .first()
+        .then((recipe)=>{
+            if(recipe){
+                req.recipe = recipe;
+                return Promise.resolve();
+            }
+            else{
+                return Promise.reject();
+            }
+        });
     }),
     checkValidation(404,"recipe_id not found")
 ];
 
 const recipeNameMustNotExist = [
-    body("recipe_name").isString().custom(recipe_name=>{
-        try{
-            return db("recipes")
-            .where({recipe_name})
-            .first()
-            .then((recipe)=>{
-                return recipe;
-            })
-        }
-        catch(e){
-            next(e);
-        }
+    //recipe_name must be unqiue for the same user
+    body("recipe_name").isString().custom((recipe_name,{req})=>{
+        return db("recipes")
+        .where({recipe_name,user_id:req.decoded.user_id})
+        .then((recipes)=>{
+            return recipes.length===0?Promise.resolve():Promise.reject();
+        })
     }),
     checkValidation(400,"recipe_name already exists")
 ];
 const user_idMustExist = [
     param("user_id").toInt().custom((user_id,{req})=>{
-        try{
-            return req.decoded.user_id === user_id;
-        }
-        catch(e){
-            next(e);
-        }
+        return req.decoded.user_id === user_id;
     }),
     checkValidation(404,"user_id not found")
 ];
 const recipeMustBelongToUser = [
     param("user_id").toInt().custom((user_id,{req})=>{
-        try{
-            if(req.recipe.user_id !== user_id){
-                return false;
-            }
-            return true;
-        }
-        catch(e){
-            next(e);
-        }
+        return req.recipe.user_id === user_id;
+
     }),
     checkValidation(401,"this recipe does not belong to you")
 ];

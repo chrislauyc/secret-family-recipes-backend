@@ -80,24 +80,25 @@ beforeEach(async()=>{
   await db.migrate.rollback();
   await db.migrate.latest();
   await db.seed.run();
+  jwt.sign = jest.fn(()=>"signed by jsonwebtoken");
+  jwt.verify = jest.fn((token)=>{
+    if(token !== "valid token"){
+      throw Error(JSON.stringify(token));
+    }
+    else{
+      return {
+        user_id:1,
+        username:"join",
+        email:"john@gmail.com"
+      };
+    }
+  })
 });
 afterAll(async()=>{
   await db.destroy();
 });
 
-jwt.sign = jest.fn(()=>"signed by jsonwebtoken");
-jwt.verify = jest.fn((token)=>{
-  if(token !== "valid token"){
-    throw Error();
-  }
-  else{
-    return {
-      user_id:1,
-      username:"join",
-      email:"john@gmail.com"
-    };
-  }
-})
+
 
 describe("[GET] /api/:user_id/recipes",()=>{
   test("[1] responds with 401 if token is missing or invalid",async()=>{
@@ -109,12 +110,26 @@ describe("[GET] /api/:user_id/recipes",()=>{
     expect(res.status).toBe(404);
   });
   test("[3] responds with 200 the correct number of rows",async()=>{
-    res = await request(server).get("/api/1/recipes").set("Authorization","valid token");
+    let res = await request(server).get("/api/1/recipes").set("Authorization","valid token");
     expect(res.status).toBe(200);
     expect(res.body).toHaveLength((await db("recipes").where({user_id:1})).length);
+    jwt.verify = jest.fn((token)=>{
+      if(token !== "valid token"){
+        throw Error(JSON.stringify(token));
+      }
+      else{
+        return {
+          user_id:2,
+          username:"tom",
+          email:"tom@gmail.com"
+        };
+      }
+    })
+    res = await request(server).get("/api/2/recipes").set("Authorization","valid token");
+    expect(res.status).toBe(200);
   });
   test("[4] responds with the correct format",async()=>{
-    res = await request(server).get("/api/1/recipes").set("Authorization","valid token");
+    let res = await request(server).get("/api/1/recipes").set("Authorization","valid token");
     const data = res.body;
     expect(data).toHaveLength(2);
     const recipe = data[0];
@@ -166,6 +181,27 @@ describe("[POST] /api/:user_id/recipes",()=>{
     const res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(invalid);
     expect(res.status).toBe(400);
   });
+  test("[5] recipe_name must be unique for the same user but can be duplicated for different users",async()=>{
+    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(recipe);
+    expect(res.status).toBe(201);
+    res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(recipe);
+    expect(res.status).toBe(400);
+    jwt.verify = jest.fn((token)=>{
+      if(token !== "valid token"){
+        throw Error(JSON.stringify(token));
+      }
+      else{
+        return {
+          user_id:2,
+          username:"tom",
+          email:"tom@gmail.com"
+        };
+      }
+    })
+    res = await request(server).post("/api/2/recipes").set("Authorization","valid token").send(recipe);
+    
+    expect(res.status).toBe(201);
+  })
 });
   
   describe("[GET] /api/:user_id/recipes/:recipe_id",()=>{
@@ -198,6 +234,10 @@ describe("[POST] /api/:user_id/recipes",()=>{
       expect(await db("recipes").where({recipe_id:1}).first()).toMatchObject({
         recipe_name:"updated name",
       });
+    })
+    test("[3] responds with 404 if recipe_id is not in database",async()=>{
+      const res = await request(server).put("/api/1/recipes/100").set("Authorization","valid token").send({...recipe,recipe_name:"updated name"});
+      expect(res.status).toBe(404)
     })
   });
   
