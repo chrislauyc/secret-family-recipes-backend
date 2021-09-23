@@ -301,6 +301,57 @@ describe("[POST] /api/:user_id/recipes",()=>{
       const res = await request(server).put("/api/1/recipes/100").set("Authorization","valid token").send({...recipe,recipe_name:"updated name"});
       expect(res.status).toBe(404)
     })
+    test("[6a] responds with 400 with invalid3",async()=>{
+      let res = await request(server).put("/api/1/recipes/1").set("Authorization","valid token").send(invalid3);
+      expect(res.status).toBe(400);
+    })
+    test("[6b] responds with 400 with invalid4",async()=>{
+      let res = await request(server).put("/api/1/recipes/1").set("Authorization","valid token").send(invalid4);
+      expect(res.status).toBe(400);
+    })
+    test("[6c] responds with 400 with invalid5",async()=>{
+      let res = await request(server).put("/api/1/recipes/1").set("Authorization","valid token").send(invalid5);
+      if(res.status !== 400){
+        expect(res.body).toBe("")
+      }
+      expect(res.status).toBe(400);
+    })
+    test("[6d] responds with 400 with invalid6",async()=>{
+      let res = await request(server).put("/api/1/recipes/1").set("Authorization","valid token").send(invalid6);
+      if(res.status !== 400){
+        expect(res.body).toBe("")
+      }
+      expect(res.status).toBe(400);
+    })
+    test("[7a] responds with 201 with valid1",async()=>{
+      let res = await request(server).put("/api/1/recipes/1").set("Authorization","valid token").send(valid1);
+      expect(res.status).toBe(200);
+    })
+    test("[7b] responds with 201 with valid2",async()=>{
+      let res = await request(server).put("/api/1/recipes/1").set("Authorization","valid token").send(valid2);
+      expect(res.status).toBe(200);
+    })
+    test("[7c] responds with 201 with valid3",async()=>{
+      let res = await request(server).put("/api/1/recipes/1").set("Authorization","valid token").send(valid3);
+      if(res.status !== 200){
+        expect(res.body).toBe("")
+      }
+      expect(res.status).toBe(200);
+    })
+    test("[7d] responds with 201 with valid4",async()=>{
+      let res = await request(server).put("/api/1/recipes/1").set("Authorization","valid token").send(valid4);
+      if(res.status !== 200){
+        expect(res.body).toBe("")
+      }
+      expect(res.status).toBe(200);
+    })
+    test("[7e] responds with 201 with valid5",async()=>{
+      let res = await request(server).put("/api/1/recipes/1").set("Authorization","valid token").send(valid5);
+      if(res.status !== 200){
+        expect(res.body).toBe("")
+      }
+      expect(res.status).toBe(200);
+    })
   });
   
   describe("[DELETE] /api/:user_id/recipes/:recipe_id",()=>{

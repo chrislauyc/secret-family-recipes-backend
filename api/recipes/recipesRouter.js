@@ -59,6 +59,7 @@ router.put(
     restricted,
     user_idMustExist,
     recipeMustExist,
+    validateRecipePayload,
     recipeMustBelongToUser,
     async(req,res,next)=>{
     try{
