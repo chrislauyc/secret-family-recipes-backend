@@ -29,7 +29,7 @@ const jwt = require("jsonwebtoken");
 //   ]
 // }
 const recipe = {
-  user_id:1,
+  // user_id:1,
   source:"grandmother",
   category:"dinner",
   recipe_name:"tacos",
@@ -174,6 +174,7 @@ describe("[POST] /api/:user_id/recipes",()=>{
     const res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(recipe);
     expect(res.body.recipe_id).toBe(recipe_id+1);
     expect(await db("recipes").where({recipe_id:recipe_id+1})).toHaveLength(1);
+    expect(res.status).toBe(201)
   });
   test("[4] responds with 400 if body is missing or invalid",async()=>{
  
@@ -202,6 +203,9 @@ describe("[POST] /api/:user_id/recipes",()=>{
     
     expect(res.status).toBe(201);
   })
+  test("[5] responds with 400 with various invalid cases",async()=>{
+
+  })
 });
   
   describe("[GET] /api/:user_id/recipes/:recipe_id",()=>{
@@ -220,7 +224,8 @@ describe("[POST] /api/:user_id/recipes",()=>{
     test("[4] responds with 200 if valid",async()=>{
       const res = await request(server).get("/api/1/recipes/1").set("Authorization","valid token");
       expect(res.status).toBe(200);
-    })
+    });
+
   });
   
   describe("[PUT] /api/:user_id/recipes/:recipe_id",()=>{

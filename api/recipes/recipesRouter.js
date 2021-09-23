@@ -30,7 +30,7 @@ router.post(
 
     async(req,res,next)=>{
     try{
-        const [recipe_id] = await recipesModel.insert(req.body);
+        const [recipe_id] = await recipesModel.insert({...req.body,user_id:req.decoded.user_id});
         res.status(201).json({recipe_id,message:"recipe added successfully"});
     }
     catch(e){

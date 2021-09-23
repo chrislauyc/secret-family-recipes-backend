@@ -62,7 +62,7 @@ const recipeMustBelongToUser = [
 ];
 
 const validateRecipePayload = [
-    body("source").isString().trim().toLowerCase().isLength({min:1}),
+    body("source").isString("source must be a string").trim().toLowerCase().isLength({min:1},),
     body("category").isString().trim().toLowerCase().isLength({min:1}),
     body("recipe_name").isString().trim().toLowerCase().isLength({min:1}),
     body("image_url").optional().trim().isURL().isLength({min:1}),
