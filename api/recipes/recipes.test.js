@@ -4,10 +4,11 @@ const db = require("../../data/data-config");
 const jwt = require("jsonwebtoken");
 const {
   valid1,
-  valid2
+  valid2,
+  valid3
 } = require("./valid-data");
 const {
-  invalid3
+  invalid3, invalid4, invalid5
 } = require("./invalid-data");
 // const recipe = {
 //   recipe_id:1,
@@ -209,8 +210,27 @@ describe("[POST] /api/:user_id/recipes",()=>{
     
     expect(res.status).toBe(201);
   })
-  test("[6] responds with 400 with various invalid cases",async()=>{
-    
+  test("[6a] responds with 400 with invalid3",async()=>{
+    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(invalid3);
+    expect(res.status).toBe(400);
+  })
+  test("[6b] responds with 400 with invalid4",async()=>{
+    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(invalid4);
+    expect(res.status).toBe(400);
+  })
+  test("[6c] responds with 400 with invalid5",async()=>{
+    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(invalid5);
+    if(res.status !== 400){
+      expect(res.body).toBe("")
+    }
+    expect(res.status).toBe(400);
+  })
+  test("[6d] responds with 400 with invalid6",async()=>{
+    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(invalid5);
+    if(res.status !== 400){
+      expect(res.body).toBe("")
+    }
+    expect(res.status).toBe(400);
   })
   test("[7a] responds with 201 with valid1",async()=>{
     let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(valid1);
@@ -218,6 +238,13 @@ describe("[POST] /api/:user_id/recipes",()=>{
   })
   test("[7b] responds with 201 with valid2",async()=>{
     let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(valid2);
+    expect(res.status).toBe(201);
+  })
+  test("[7c] responds with 201 with valid3",async()=>{
+    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(valid3);
+    if(res.status !== 201){
+      expect(res.body).toBe("")
+    }
     expect(res.status).toBe(201);
   })
 });
