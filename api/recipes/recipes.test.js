@@ -2,7 +2,13 @@ const request = require("supertest");
 const server = require("../server");
 const db = require("../../data/data-config");
 const jwt = require("jsonwebtoken");
-
+const {
+  valid1,
+  valid2
+} = require("./valid-data");
+const {
+  invalid3
+} = require("./invalid-data");
 // const recipe = {
 //   recipe_id:1,
 //   user_id:1,
@@ -179,7 +185,7 @@ describe("[POST] /api/:user_id/recipes",()=>{
   test("[4] responds with 400 if body is missing or invalid",async()=>{
  
 
-    const res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(invalid);
+    const res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(invalid3);
     expect(res.status).toBe(400);
   });
   test("[5] recipe_name must be unique for the same user but can be duplicated for different users",async()=>{
@@ -203,8 +209,16 @@ describe("[POST] /api/:user_id/recipes",()=>{
     
     expect(res.status).toBe(201);
   })
-  test("[5] responds with 400 with various invalid cases",async()=>{
-
+  test("[6] responds with 400 with various invalid cases",async()=>{
+    
+  })
+  test("[7a] responds with 201 with valid1",async()=>{
+    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(valid1);
+    expect(res.status).toBe(201);
+  })
+  test("[7b] responds with 201 with valid2",async()=>{
+    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(valid2);
+    expect(res.status).toBe(201);
   })
 });
   

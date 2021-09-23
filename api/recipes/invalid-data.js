@@ -45,9 +45,9 @@ const invalid2 = {
         }
     ]
 }
-const invalid2 = {
+const invalid3 = {
     user_id:1,
-    source:"grandmother",
+    // source:"grandmother",
     recipe_name:"tacos",
     category:"dinner",
     image_url:"https://www.thewholesomedish.com/wp-content/uploads/2019/06/The-Best-Classic-Tacos-550.jpg",
@@ -68,4 +68,7 @@ const invalid2 = {
             ]
         }
     ]
+}
+module.exports = {
+    invalid3
 }

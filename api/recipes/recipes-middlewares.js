@@ -62,17 +62,17 @@ const recipeMustBelongToUser = [
 ];
 
 const validateRecipePayload = [
-    body("source").isString("source must be a string").trim().toLowerCase().isLength({min:1},),
-    body("category").isString().trim().toLowerCase().isLength({min:1}),
-    body("recipe_name").isString().trim().toLowerCase().isLength({min:1}),
-    body("image_url").optional().trim().isURL().isLength({min:1}),
-    body("steps").isArray(),
-    body("steps.*.description").isString().trim().isString().isLength({min:1}),
-    body("steps.*.ingredients").isArray(),
-    body("steps.*.ingredients.*.ingredient_name").isString().trim().toLowerCase().isLength({min:1}),
-    body("steps.*.ingredients.*.amount").isNumeric({min:0}),
-    body("steps.*.ingredients.*.unit").optional().isString().trim().toLowerCase().isLength({min:1}),
-    checkValidation(400,"invalid recipe object")
+    body("source").isString().withMessage("source missing or invalid").trim().toLowerCase().isLength({min:1}).withMessage("source cannot be an empty string"),
+    body("category").isString().withMessage("category missing or invalid ").trim().toLowerCase().isLength({min:1}).withMessage("category cannot be an empty string"),
+    body("recipe_name").isString().withMessage("recipe_name missing or invalid").trim().toLowerCase().isLength({min:1}).withMessage("recipe_name cannot be an empty string"),
+    body("image_url").optional().trim().isURL().withMessage("image_url must be a URL").isLength({min:1}).withMessage("image_url is optional but cannot be empty when provided"),
+    body("steps").isArray().withMessage("steps must be an array"),
+    body("steps.*.description").isString().withMessage("description missing or invalid").trim().isLength({min:1}).withMessage("description cannot be an empty string"),
+    body("steps.*.ingredients").isArray().withMessage("ingredients must be an array"),
+    body("steps.*.ingredients.*.ingredient_name").isString().withMessage("ingredient_name missing or invalid").trim().toLowerCase().isLength({min:1}).withMessage("ingredient_name cannot be an empty string"),
+    body("steps.*.ingredients.*.amount").isNumeric({min:0}).withMessage("amount must be a number greater than 0"),
+    body("steps.*.ingredients.*.unit").optional().isString().withMessage("unit must be a string").trim().toLowerCase().isLength({min:1}).withMessage("unit cannot be an empty string"),
+    checkValidation(400)
 ];
 
 
