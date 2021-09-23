@@ -5,10 +5,12 @@ const jwt = require("jsonwebtoken");
 const {
   valid1,
   valid2,
-  valid3
+  valid3,
+  valid4,
+  valid5
 } = require("./valid-data");
 const {
-  invalid3, invalid4, invalid5
+  invalid3, invalid4, invalid5, invalid6
 } = require("./invalid-data");
 // const recipe = {
 //   recipe_id:1,
@@ -226,7 +228,7 @@ describe("[POST] /api/:user_id/recipes",()=>{
     expect(res.status).toBe(400);
   })
   test("[6d] responds with 400 with invalid6",async()=>{
-    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(invalid5);
+    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(invalid6);
     if(res.status !== 400){
       expect(res.body).toBe("")
     }
@@ -242,6 +244,20 @@ describe("[POST] /api/:user_id/recipes",()=>{
   })
   test("[7c] responds with 201 with valid3",async()=>{
     let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(valid3);
+    if(res.status !== 201){
+      expect(res.body).toBe("")
+    }
+    expect(res.status).toBe(201);
+  })
+  test("[7d] responds with 201 with valid4",async()=>{
+    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(valid4);
+    if(res.status !== 201){
+      expect(res.body).toBe("")
+    }
+    expect(res.status).toBe(201);
+  })
+  test("[7e] responds with 201 with valid5",async()=>{
+    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(valid5);
     if(res.status !== 201){
       expect(res.body).toBe("")
     }
