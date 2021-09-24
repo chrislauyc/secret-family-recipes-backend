@@ -51,23 +51,8 @@ const invalid3 = {
     recipe_name:"tacos",
     category:"dinner",
     image_url:"https://www.thewholesomedish.com/wp-content/uploads/2019/06/The-Best-Classic-Tacos-550.jpg",
-    steps:[
-        {
-          description:"cook them",
-          ingredients:[
-              {
-                  ingredient_name:"taco shell",
-                  amount:10,
-                  unit:"none"
-              },
-              {
-                  ingredient_name:"miced beef",
-                  amount:125,
-                  unit:"gram"
-              }
-            ]
-        }
-    ]
+    ingredients:"something,something,something",
+    descriptions:"do something. do something."
 }
 const invalid4 = {
     source:"grandmother",
@@ -75,69 +60,25 @@ const invalid4 = {
     // category:"dinner",
     category:"something else",
     image_url:"https://www.thewholesomedish.com/wp-content/uploads/2019/06/The-Best-Classic-Tacos-550.jpg",
-    steps:[
-        {
-          description:"cook them",
-          ingredients:[
-              {
-                  ingredient_name:"taco shell",
-                  amount:10,
-                  unit:"none"
-              },
-              {
-                  ingredient_name:"miced beef",
-                  amount:125,
-                  unit:"gram"
-              }
-            ]
-        }
-    ]
+    ingredients:"something. something.",
+    descriptions:"do something. do something."
 }
 const invalid5 = {
     source:"grandmother",
     recipe_name:"tacos",
     category:"dinner",
+    // image_url:"https://www.thewholesomedish.com/wp-content/uploads/2019/06/The-Best-Classic-Tacos-550.jpg",
     image_url:".thewholesomedish.com/wp-content/uploads/2019/06/The-Best-Classic-Tacos-550.jpg",
-    steps:[
-        {
-          description:"cook them",
-          ingredients:[
-              {
-                  ingredient_name:"taco shell",
-                  amount:10,
-                  unit:"none"
-              },
-              {
-                  ingredient_name:"miced beef",
-                  amount:125,
-                  unit:"gram"
-              }
-            ]
-        }
-    ]
+    ingredients:"something. something.",
+    descriptions:"do something. do something."
 }
 const invalid6 = {
     source:"grandmother",
     recipe_name:"tacos",
     category:"dinner",
     image_url:"https://www.thewholesomedish.com/wp-content/uploads/2019/06/The-Best-Classic-Tacos-550.jpg",
-    steps:[
-        {
-          description:"cook them",
-          ingredients:[
-              {
-                  ingredient_name:"taco shell",
-                  amount:10,
-                  unit:"none"
-              },
-              {
-                  ingredient_name:"miced beef",
-                  amount:"125a",
-                  unit:"gram"
-              }
-            ]
-        }
-    ]
+    ingredients:"something. something.",
+    // descriptions:"do something. do something."
 }
 module.exports = {
     invalid3,

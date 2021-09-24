@@ -3,89 +3,20 @@ const server = require("../server");
 const db = require("../../data/data-config");
 const jwt = require("jsonwebtoken");
 const {
-  valid1,
-  valid2,
-  valid3,
-  valid4,
-  valid5,
-  valid6,
-  valid7
+  valid1,valid2,valid3,valid4,valid5,valid6
 } = require("./valid-data");
 const {
   invalid3, invalid4, invalid5, invalid6
 } = require("./invalid-data");
-// const recipe = {
-//   recipe_id:1,
-//   user_id:1,
-//   source:"grandmother",
-//   category:"dinner",
-//   recipe_name:"tacos",
-//   image_url:"https://www.thewholesomedish.com/wp-content/uploads/2019/06/The-Best-Classic-Tacos-550.jpg",
-//   steps:[
-//       {
-//         description:"cook them",
-//         ingredients:[
-//             {
-//                 ingredient_name:"taco shell",
-//                 amount:10,
-//                 unit:"none"
-//             },
-//             {
-//                 ingredient_name:"miced beef",
-//                 amount:125,
-//                 unit:"gram"
-//             }
-//         ]
-//       }
-//   ]
-// }
+
 const recipe = {
   // user_id:1,
   source:"grandmother",
   category:"dinner",
   recipe_name:"tacos",
   image_url:"https://someimage.jpg",
-  steps:[
-      {
-          description:"cook them",
-          ingredients:[
-              {
-                  ingredient_name:"taco shell",
-                  amount:10,
-                  unit:"none"
-              },
-              {
-                  ingredient_name:"miced beef",
-                  amount:125,
-                  unit:"gram"
-              }
-          ]
-      }
-  ]
-}
-const invalid = {
-  recipe_id:1,
-  user_id:1,
-  source:"grandmother",
-  category:"dinner",
-  image_url:"https://www.thewholesomedish.com/wp-content/uploads/2019/06/The-Best-Classic-Tacos-550.jpg",
-  steps:[
-      {
-        description:"cook them",
-        ingredients:[
-            {
-                ingredient_name:"taco shell",
-                amount:10,
-                unit:"none"
-            },
-            {
-                ingredient_name:"miced beef",
-                amount:125,
-                unit:"gram"
-            }
-        ]
-      }
-    ]
+  ingredients:"butter, garlic, tomatoes",
+  descriptions:"blah blah blah blah blah"
 }
 beforeEach(async()=>{
   await db.migrate.rollback();
@@ -150,22 +81,8 @@ describe("[GET] /api/:user_id/recipes",()=>{
     expect(recipe).toHaveProperty("category");
     expect(recipe).toHaveProperty("recipe_name");
     expect(recipe).toHaveProperty("image_url");
-    expect(recipe).toHaveProperty("steps");
-
-    expect(recipe.steps).toHaveLength(3);
-
-    const step = recipe.steps[0];
-
-    expect(step).toHaveProperty("description");
-    expect(step).toHaveProperty("ingredients");
-
-    expect(step.ingredients).toHaveLength(1);
-
-    const ingredient = step.ingredients[0];
-
-    expect(ingredient).toHaveProperty("ingredient_name");
-    expect(ingredient).toHaveProperty("amount");
-    expect(ingredient).toHaveProperty("unit");
+    expect(recipe).toHaveProperty("ingredients");
+    expect(recipe).toHaveProperty("descriptions");
   });
 });
   
@@ -188,8 +105,6 @@ describe("[POST] /api/:user_id/recipes",()=>{
     expect(res.status).toBe(201)
   });
   test("[4] responds with 400 if body is missing or invalid",async()=>{
- 
-
     const res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(invalid3);
     expect(res.status).toBe(400);
   });
@@ -267,13 +182,6 @@ describe("[POST] /api/:user_id/recipes",()=>{
   })
   test("[7f] responds with 201 with valid6",async()=>{
     let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(valid6);
-    if(res.status !== 201){
-      expect(res.body).toBe("")
-    }
-    expect(res.status).toBe(201);
-  })
-  test("[7g] responds with 201 with valid7",async()=>{
-    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(valid7);
     if(res.status !== 201){
       expect(res.body).toBe("")
     }

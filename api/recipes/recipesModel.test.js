@@ -23,22 +23,8 @@ describe("recipesModel.js",()=>{
             expect(recipe).toHaveProperty("category");
             expect(recipe).toHaveProperty("recipe_name");
             expect(recipe).toHaveProperty("image_url");
-            expect(recipe).toHaveProperty("steps");
-
-            expect(recipe.steps).toHaveLength(3);
-
-            const step = recipe.steps[0];
-
-            expect(step).toHaveProperty("description");
-            expect(step).toHaveProperty("ingredients");
-
-            expect(step.ingredients).toHaveLength(1);
-
-            const ingredient = step.ingredients[0];
-
-            expect(ingredient).toHaveProperty("ingredient_name");
-            expect(ingredient).toHaveProperty("amount");
-            expect(ingredient).toHaveProperty("unit");
+            expect(recipe).toHaveProperty("ingredients");
+            expect(recipe).toHaveProperty("descriptions");
         });
         test("returns empty array if user_id does not exist",async()=>{
             expect(await model.get(100)).toHaveLength(0);
@@ -53,22 +39,8 @@ describe("recipesModel.js",()=>{
             expect(recipe).toHaveProperty("category");
             expect(recipe).toHaveProperty("recipe_name");
             expect(recipe).toHaveProperty("image_url");
-            expect(recipe).toHaveProperty("steps");
-
-            expect(recipe.steps).toHaveLength(3);
-
-            const step = recipe.steps[0];
-
-            expect(step).toHaveProperty("description");
-            expect(step).toHaveProperty("ingredients");
-
-            expect(step.ingredients).toHaveLength(1);
-
-            const ingredient = step.ingredients[0];
-
-            expect(ingredient).toHaveProperty("ingredient_name");
-            expect(ingredient).toHaveProperty("amount");
-            expect(ingredient).toHaveProperty("unit");
+            expect(recipe).toHaveProperty("ingredients");
+            expect(recipe).toHaveProperty("descriptions");
         });
     });
     describe("insert",()=>{
@@ -78,23 +50,8 @@ describe("recipesModel.js",()=>{
             category:"dinner",
             recipe_name:"tacos",
             image_url:"https://someimage.jpg",
-            steps:[
-                {
-                    description:"cook them",
-                    ingredients:[
-                        {
-                            ingredient_name:"taco shell",
-                            amount:10,
-                            unit:"none"
-                        },
-                        {
-                            ingredient_name:"miced beef",
-                            amount:125,
-                            unit:"gram"
-                        }
-                    ]
-                }
-            ]
+            ingredients:"aposdinfapsodvasdfafs",
+            descriptions:"apsdouvnapsdovunasdpofansdpoqjsndpgqig"
         }
         test("can insert into database",async()=>{
 
@@ -104,14 +61,6 @@ describe("recipesModel.js",()=>{
                 await db("recipes")
                 .where({recipe_id,recipe_name:"tacos",source_name:"grandmother",category_name:"dinner",image_url:"https://someimage.jpg"})
             ).toHaveLength(1);
-
-            expect(
-                await db("steps")
-                .where({recipe_id})
-                .join("ingredients_steps as i","i.step_id","steps.step_id")
-                .join("ingredients","i.ingredient_id","ingredients.ingredient_id")
-                .leftJoin("units","units.unit_id","i.unit_id")
-            ).toHaveLength(2);
         })
         test("add duplicate recipe with different recipe_name without error",async()=>{
             await model.insert(recipe);
@@ -126,29 +75,9 @@ describe("recipesModel.js",()=>{
                 category:"dinner",
                 recipe_name:"tacos",
                 image_url:"https://someimage.jpg",
-                steps:[
-                    {
-                        description:"cook them",
-                        ingredients:[
-                            {
-                                ingredient_name:"taco shell",
-                                amount:10,
-                                unit:"none"
-                            },
-                            {
-                                ingredient_name:"miced beef",
-                                amount:125,
-                                unit:"gram"
-                            }
-                        ]
-                    }
-                ]
+                ingredients:"new new new",
+                descriptions:"do something do something"
             }
-
-            //ing_steps that are not recipe_id:1
-            const ing_steps = await db("steps")
-            .whereNot({recipe_id:1})
-            .join("ingredients_steps as i","i.step_id","steps.step_id");
 
             const [recipe_id] = await model.update(recipe,1);
             expect(await db("recipes").where({recipe_id,recipe_name:"tacos"})).toHaveLength(1);
@@ -156,35 +85,15 @@ describe("recipesModel.js",()=>{
                 await db("recipes")
                 .where({recipe_id,recipe_name:"tacos",source_name:"grandmother",category_name:"dinner",image_url:"https://someimage.jpg"})
             ).toHaveLength(1);
-            expect(
-                await db("steps")
-                .where({recipe_id})
-                .join("ingredients_steps as i","i.step_id","steps.step_id")
-                .join("ingredients","i.ingredient_id","ingredients.ingredient_id")
-                .leftJoin("units","units.unit_id","i.unit_id")
-            ).toHaveLength(2);
-
-            expect(
-                await db("ingredients_steps")
-            ).toHaveLength(ing_steps.length+2);
         });
     });
     describe("remove",()=>{
         test("removed records from db",async()=>{
-            //ing_steps that are not recipe_id:1
-            const ing_steps = await db("steps")
-            .whereNot({recipe_id:1})
-            .join("ingredients_steps as i","i.step_id","steps.step_id");
             //call function
             const [recipe_id] = await model.remove(1);
             expect(
                 await db("recipes").where({recipe_id})
             ).toHaveLength(0);
-            expect(
-                await db("ingredients_steps")
-            ).toHaveLength(ing_steps.length);
-            
-
         });
     });
 });
