@@ -46,16 +46,17 @@ const insertSteps = async(steps,recipe_id)=>{
                 ingredient_ids.push(ingredient[0].ingredient_id);
             }
         }
-        
-        const ingredients_steps = step.ingredients.map(({amount},i)=>({
-            amount,
-            step_id,
-            unit_id:unit_ids[i],
-            ingredient_id:ingredient_ids[i]
-        }));
-
-        await db("ingredients_steps")
-        .insert(ingredients_steps)
+        if(ingredient_ids.length !== 0){
+            const ingredients_steps = step.ingredients.map(({amount},i)=>({
+                amount,
+                step_id,
+                unit_id:unit_ids[i],
+                ingredient_id:ingredient_ids[i]
+            }));
+            
+            await db("ingredients_steps")
+            .insert(ingredients_steps)
+        }
     } 
 };
 

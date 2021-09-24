@@ -7,7 +7,9 @@ const {
   valid2,
   valid3,
   valid4,
-  valid5
+  valid5,
+  valid6,
+  valid7
 } = require("./valid-data");
 const {
   invalid3, invalid4, invalid5, invalid6
@@ -258,6 +260,20 @@ describe("[POST] /api/:user_id/recipes",()=>{
   })
   test("[7e] responds with 201 with valid5",async()=>{
     let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(valid5);
+    if(res.status !== 201){
+      expect(res.body).toBe("")
+    }
+    expect(res.status).toBe(201);
+  })
+  test("[7f] responds with 201 with valid6",async()=>{
+    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(valid6);
+    if(res.status !== 201){
+      expect(res.body).toBe("")
+    }
+    expect(res.status).toBe(201);
+  })
+  test("[7g] responds with 201 with valid7",async()=>{
+    let res = await request(server).post("/api/1/recipes").set("Authorization","valid token").send(valid7);
     if(res.status !== 201){
       expect(res.body).toBe("")
     }
